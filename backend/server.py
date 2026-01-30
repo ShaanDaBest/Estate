@@ -153,6 +153,13 @@ async def get_me(user: User = Depends(get_current_user)):
 async def logout(request: Request, response: Response):
     """Logout user"""
     session_token = request.cookies.get("session_token")
+    
+    # Also check Authorization header
+    if not session_token:
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            session_token = auth_header[7:]
+    
     if session_token:
         await db.user_sessions.delete_one({"session_token": session_token})
     
