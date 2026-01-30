@@ -1,0 +1,193 @@
+{
+  "identity": {
+    "persona": "E1 - The Anti-AI Designer",
+    "archetype": "Jewel & Luxury (The 'Estate' Variant)",
+    "mission": "Create a high-efficiency, luxury-grade dashboard for elite real estate agents that feels like a private banking app, not a spreadsheet."
+  },
+  "typography": {
+    "headings": {
+      "family": "Playfair Display, serif",
+      "weights": ["400", "600", "700"],
+      "usage": "Page titles, Property names, Key metrics",
+      "letterSpacing": "-0.02em"
+    },
+    "body": {
+      "family": "Manrope, sans-serif",
+      "weights": ["400", "500", "600"],
+      "usage": "UI elements, data tables, client details",
+      "letterSpacing": "0.01em"
+    },
+    "mono": {
+      "family": "JetBrains Mono, monospace",
+      "usage": "Time slots, Route distances, IDs"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "gold": "#D3AF37",
+        "gold_hover": "#B68A35",
+        "gold_light": "#F4E5BC"
+      },
+      "neutrals": {
+        "obsidian": "#0A0A0A",
+        "charcoal": "#171717",
+        "slate": "#4C4C4C",
+        "silver": "#E5E7EB",
+        "alabaster": "#F9FAFB",
+        "white": "#FFFFFF"
+      },
+      "functional": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF4444",
+        "info": "#3B82F6",
+        "apple_blue": "#007AFF",
+        "android_green": "#3DDC84"
+      }
+    },
+    "theme_strategy": {
+      "mode": "light",
+      "background": "bg-alabaster",
+      "surface": "bg-white",
+      "border": "border-neutral-200",
+      "text_primary": "text-neutral-900",
+      "text_secondary": "text-neutral-500"
+    },
+    "gradients": {
+      "gold_sheen": "linear-gradient(135deg, #D3AF37 0%, #F4E5BC 50%, #B68A35 100%)",
+      "luxury_dark": "linear-gradient(180deg, #171717 0%, #0A0A0A 100%)"
+    }
+  },
+  "visual_enhancers": {
+    "borders": {
+      "subtle": "1px solid rgba(0,0,0,0.08)",
+      "gold_accent": "1px solid #D3AF37",
+      "focus_ring": "2px solid #D3AF37"
+    },
+    "shadows": {
+      "card": "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
+      "float": "0 10px 40px -10px rgba(0, 0, 0, 0.1)",
+      "gold_glow": "0 0 15px rgba(211, 175, 55, 0.3)"
+    },
+    "radius": {
+      "card": "0px",
+      "button": "2px",
+      "input": "0px"
+    },
+    "textures": {
+      "noise": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E\")"
+    }
+  },
+  "layout_strategy": {
+    "dashboard": {
+      "type": "Bento Grid",
+      "grid_cols": "grid-cols-1 md:grid-cols-12",
+      "gap": "gap-6",
+      "padding": "p-6 md:p-10"
+    },
+    "spacing": {
+      "container_padding": "p-8",
+      "section_gap": "gap-12",
+      "item_gap": "gap-4"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#D3AF37] text-white hover:bg-[#B68A35] rounded-sm font-medium tracking-wide uppercase text-xs px-6 py-3 shadow-md transition-all",
+      "secondary": "bg-white border border-neutral-200 text-neutral-900 hover:bg-neutral-50 rounded-sm font-medium tracking-wide uppercase text-xs px-6 py-3 transition-all",
+      "ghost": "text-neutral-500 hover:text-[#D3AF37] hover:bg-neutral-50 rounded-sm"
+    },
+    "cards": {
+      "style": "bg-white border border-neutral-100 shadow-card hover:shadow-float transition-all duration-300 relative overflow-hidden group",
+      "decoration": "Before element: absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#D3AF37] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+    },
+    "inputs": {
+      "style": "bg-neutral-50 border-b-2 border-neutral-200 focus:border-[#D3AF37] outline-none px-4 py-3 transition-colors rounded-none"
+    },
+    "status_badges": {
+      "open_house": "bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-1 text-[10px] uppercase tracking-wider font-bold",
+      "private_viewing": "bg-neutral-100 text-neutral-600 border border-neutral-200 px-2 py-1 text-[10px] uppercase tracking-wider font-bold",
+      "urgent": "bg-rose-50 text-rose-700 border border-rose-100 px-2 py-1 text-[10px] uppercase tracking-wider font-bold"
+    }
+  },
+  "image_urls": {
+    "houses": [
+      {
+        "url": "https://images.unsplash.com/photo-1746458258536-b9ee5db20a73?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MTN8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtb2Rlcm4lMjBob3VzZSUyMGV4dGVyaW9yJTIwYXJjaGl0ZWN0dXJlfGVufDB8fHx8MTc2OTc0OTMxOHww&ixlib=rb-4.1.0&q=85",
+        "desc": "Hillside Luxury House",
+        "category": "property_card"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1766603636562-531bb3e1dda8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MTN8MHwxfHNlYXJjaHwyfHxsdXh1cnklMjBtb2Rlcm4lMjBob3VzZSUyMGV4dGVyaW9yJTIwYXJjaGl0ZWN0dXJlfGVufDB8fHx8MTc2OTc0OTMxOHww&ixlib=rb-4.1.0&q=85",
+        "desc": "Modern Wooden Facade",
+        "category": "property_card"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1706855203772-c249b75fe016?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MTN8MHwxfHNlYXJjaHw0fHxsdXh1cnklMjBtb2Rlcm4lMjBob3VzZSUyMGV4dGVyaW9yJTIwYXJjaGl0ZWN0dXJlfGVufDB8fHx8MTc2OTc0OTMxOHww&ixlib=rb-4.1.0&q=85",
+        "desc": "House with Pool",
+        "category": "property_card"
+      }
+    ],
+    "agents": [
+      {
+        "url": "https://images.unsplash.com/photo-1738750908048-14200459c3c9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHw0fHxwcm9mZXNzaW9uYWwlMjByZWFsJTIwZXN0YXRlJTIwYWdlbnQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3Njk3NDkzMjB8MA&ixlib=rb-4.1.0&q=85",
+        "desc": "Male Agent Suit",
+        "category": "profile"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1763478958776-ebd04b6459ee?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjByZWFsJTIwZXN0YXRlJTIwYWdlbnQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3Njk3NDkzMjB8MA&ixlib=rb-4.1.0&q=85",
+        "desc": "Female Agent Modern",
+        "category": "profile"
+      }
+    ],
+    "interiors": [
+      {
+        "url": "https://images.unsplash.com/photo-1705321963943-de94bb3f0dd3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MjJ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBtaW5pbWFsaXN0JTIwbGl2aW5nJTIwcm9vbSUyMGludGVyaW9yfGVufDB8fHx8MTc2OTc0OTMyMXww&ixlib=rb-4.1.0&q=85",
+        "desc": "Modern Living Room",
+        "category": "background"
+      }
+    ]
+  },
+  "icons": {
+    "library": "lucide-react",
+    "custom_needs": [
+      "FaApple (react-icons/fa) for iPhone clients",
+      "FaAndroid (react-icons/fa) for Android clients",
+      "MapPin (lucide) for locations",
+      "Navigation (lucide) for route",
+      "Clock (lucide) for time",
+      "Calendar (lucide) for schedule"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "INSTALL: npm install @fontsource/playfair-display @fontsource/manrope @fontsource/jetbrains-mono react-icons",
+    "THEME: Implement the 'Grey and Gold' theme strictly. Do not use default blue/purple accents.",
+    "LAYOUT: The Dashboard must use a Bento Grid. The 'Route Map' should be the largest element (col-span-8 row-span-2).",
+    "FEATURE - ROUTE OPTIMIZER: Create a drag-and-drop list for 'Priorities' (e.g., 'Open House First', 'Shortest Distance'). Use 'framer-motion' for the reordering animation.",
+    "FEATURE - CLIENTS: In the client list, display a small colored dot or icon indicating 'Textable' status (Blue for Apple, Green for Android).",
+    "FEATURE - MAP: Since no external API is allowed, create a 'Mock Map' component. Use a static map image background and overlay CSS-positioned 'Pin' components connected by SVG lines to visualize the route.",
+    "ACCESSIBILITY: Ensure the Gold text (#D3AF37) is only used on dark backgrounds or as large headings. On white backgrounds, use it for borders/accents, not body text.",
+    "TESTING: Add data-testid to all interactive elements (buttons, inputs, drag-handles)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Create new components that match the style and conventions of existing components when needed",
+    "Examine existing components to understand the project's component patterns before creating new ones",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use sonner for toasts. Sonner component are located in /app/src/components/ui/sonner.tsx"
+  ]
+}
