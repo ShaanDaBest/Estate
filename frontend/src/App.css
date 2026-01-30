@@ -245,6 +245,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: auto;
+}
+
+/* Ensure dialogs don't block navigation */
+[data-radix-dialog-overlay] {
+    z-index: 100;
+}
+
+[data-radix-dialog-content] {
+    z-index: 101;
 }
 
 .modal-content {
