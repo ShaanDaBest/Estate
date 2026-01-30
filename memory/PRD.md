@@ -17,12 +17,14 @@ Build a real estate agent scheduler that routes 5 clients per day, finds ideal v
 - **Styling**: Grey & Gold luxury theme with Playfair Display + Manrope fonts
 
 ## Core Features Implemented (Jan 30, 2026)
-1. **Dashboard** - Daily schedule overview with stats cards, optimized route map
-2. **Client Management** - CRUD with name, phone (Apple/Android), email, address
-3. **Appointment Scheduling** - Create appointments with address, city, date, time, duration, open house toggle
-4. **Route Optimizer** - Drag-drop priority reordering, weight adjustment, auto-optimization
-5. **House Notes** - Property-specific notes with follow-up tracking
-6. **House Status** - Track available, pending, sold, off_market, open_house
+1. **Google Authentication** - Emergent-managed Google OAuth sign-in
+2. **Dashboard** - Daily schedule overview with stats cards, optimized route map
+3. **Client Management** - CRUD with name, phone (Apple/Android), email, address
+4. **Appointment Scheduling** - Create appointments with address, city, date, time, duration, open house toggle
+5. **Route Optimizer** - Drag-drop priority reordering, weight adjustment, auto-optimization
+6. **House Notes** - Property-specific notes with follow-up tracking
+7. **House Status** - Track available, pending, sold, off_market, open_house
+8. **User Data Isolation** - Each agent has their own private data
 
 ## API Endpoints
 - `/api/clients` - CRUD for clients
