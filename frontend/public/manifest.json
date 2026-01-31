@@ -1,0 +1,48 @@
+{
+  "short_name": "Estate",
+  "name": "Estate Scheduler Pro",
+  "description": "Smart scheduling and route optimization for real estate agents",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#D3AF37",
+  "background_color": "#F9FAFB",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/",
+      "description": "View your daily schedule"
+    },
+    {
+      "name": "Add Client",
+      "url": "/clients",
+      "description": "Add a new client"
+    },
+    {
+      "name": "Schedule",
+      "url": "/appointments",
+      "description": "Manage appointments"
+    }
+  ]
+}
