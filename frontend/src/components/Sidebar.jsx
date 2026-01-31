@@ -21,8 +21,10 @@ export const Sidebar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        const token = localStorage.getItem("session_token");
         const response = await fetch(`${API}/auth/me`, {
           credentials: "include",
+          headers: token ? { "Authorization": `Bearer ${token}` } : {},
         });
         if (response.ok) {
           const userData = await response.json();
