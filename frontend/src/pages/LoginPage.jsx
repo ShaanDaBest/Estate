@@ -1,46 +1,38 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, MapPin, Calendar, Route } from "lucide-react";
+import { MapPin, Calendar, Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import { useAuth } from "@/App";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { isAuthenticated, loading } = useAuth();
 
-  // Check if already authenticated
+  // Redirect if already authenticated
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem("session_token");
-        const headers = token ? { "Authorization": `Bearer ${token}` } : {};
-        
-        const response = await fetch(`${API}/auth/me`, {
-          credentials: "include",
-          headers,
-        });
-        if (response.ok) {
-          navigate("/", { replace: true });
-        }
-      } catch (error) {
-        // Not authenticated, stay on login page
-      }
-    };
-    checkAuth();
-  }, [navigate]);
+    if (!loading && isAuthenticated) {
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, loading, navigate]);
 
   const handleGoogleLogin = () => {
-    // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
     const redirectUrl = window.location.origin + "/";
     window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#D3AF37] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex" data-testid="login-page">
       {/* Left Side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden">
-        {/* Background Pattern */}
         <div 
           className="absolute inset-0 opacity-5"
           style={{
@@ -52,13 +44,11 @@ export default function LoginPage() {
           }}
         />
         
-        {/* Logo */}
         <div className="relative z-10">
           <h1 className="font-display text-4xl text-white font-bold">Estate</h1>
           <p className="text-neutral-400 mt-1">Scheduler Pro</p>
         </div>
 
-        {/* Feature Highlights */}
         <div className="relative z-10 space-y-8">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-sm bg-[#D3AF37]/10 flex items-center justify-center flex-shrink-0">
@@ -91,34 +81,26 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="relative z-10">
-          <p className="text-neutral-500 text-sm">
-            © 2026 Estate Scheduler Pro. Built for elite real estate agents.
-          </p>
+          <p className="text-neutral-500 text-sm">© 2026 Estate Scheduler Pro</p>
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* Right Side - Login */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-[#F9FAFB]">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-12">
             <h1 className="font-display text-3xl font-bold text-[#0A0A0A]">Estate</h1>
             <p className="text-neutral-500 mt-1">Scheduler Pro</p>
           </div>
 
-          {/* Welcome Text */}
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl font-semibold text-[#0A0A0A] mb-2">
               Welcome Back
             </h2>
-            <p className="text-neutral-500">
-              Sign in to manage your daily schedule
-            </p>
+            <p className="text-neutral-500">Sign in to manage your daily schedule</p>
           </div>
 
-          {/* Google Sign In Button */}
           <Button
             onClick={handleGoogleLogin}
             className="w-full h-14 bg-white border-2 border-neutral-200 text-neutral-800 hover:bg-neutral-50 hover:border-[#D3AF37] transition-colors duration-200 gap-3 text-base font-medium"
@@ -128,7 +110,6 @@ export default function LoginPage() {
             Continue with Google
           </Button>
 
-          {/* Divider */}
           <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-neutral-200" />
@@ -140,7 +121,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Features List */}
           <div className="space-y-3">
             {[
               "Route optimization for up to 5+ clients daily",
@@ -155,7 +135,6 @@ export default function LoginPage() {
             ))}
           </div>
 
-          {/* Footer */}
           <p className="text-center text-xs text-neutral-400 mt-10">
             By signing in, you agree to our Terms of Service and Privacy Policy
           </p>
