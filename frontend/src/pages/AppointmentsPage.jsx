@@ -51,6 +51,8 @@ const emptyAppointment = {
   is_open_house: false,
   appointment_type: "private_viewing",
   house_status: "available",
+  latitude: null,
+  longitude: null,
 };
 
 const houseStatuses = [
@@ -349,12 +351,20 @@ export default function AppointmentsPage() {
 
               <div className="form-group">
                 <Label className="form-label">Property Address</Label>
-                <Input
+                <AddressInput
                   value={formData.property_address}
-                  onChange={(e) => setFormData({ ...formData, property_address: e.target.value })}
+                  onChange={(value) => setFormData({ ...formData, property_address: value })}
+                  onValidated={(data) => {
+                    setFormData({
+                      ...formData,
+                      property_address: data.address,
+                      city: data.city || formData.city,
+                      latitude: data.latitude,
+                      longitude: data.longitude,
+                    });
+                  }}
+                  placeholder="123 Main St, City, State"
                   className="input-luxury"
-                  placeholder="123 Main St"
-                  required
                   data-testid="appt-address-input"
                 />
               </div>
