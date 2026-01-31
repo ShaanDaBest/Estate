@@ -7,6 +7,7 @@ import ClientsPage from "@/pages/ClientsPage";
 import AppointmentsPage from "@/pages/AppointmentsPage";
 import RouteOptimizerPage from "@/pages/RouteOptimizerPage";
 import NotesPage from "@/pages/NotesPage";
+import SettingsPage from "@/pages/SettingsPage";
 import LoginPage from "@/pages/LoginPage";
 import AuthCallback from "@/pages/AuthCallback";
 import Sidebar from "@/components/Sidebar";
@@ -131,6 +132,16 @@ function AppRouter() {
           <ProtectedRoute>
             <AppLayout>
               <NotesPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <SettingsPage />
             </AppLayout>
           </ProtectedRoute>
         }

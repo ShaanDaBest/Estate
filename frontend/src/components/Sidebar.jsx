@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Users, Calendar, Route, FileText, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, Calendar, Route, FileText, LogOut, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -15,6 +15,7 @@ export const Sidebar = () => {
     { path: "/appointments", icon: Calendar, label: "Appointments" },
     { path: "/optimize", icon: Route, label: "Route Optimizer" },
     { path: "/notes", icon: FileText, label: "House Notes" },
+    { path: "/settings", icon: Settings, label: "Settings" },
   ];
 
   useEffect(() => {
