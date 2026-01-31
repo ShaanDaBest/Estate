@@ -451,7 +451,17 @@ async def update_priorities(settings: RoutePrioritySettings, user: User = Depend
     return settings
 
 # === ROUTE OPTIMIZATION ===
-def calculate_mock_distance(addr1: str, addr2: str) -> float:
+def calculate_distance(appt1: dict, appt2: dict) -> float:
+    """Calculate real distance if coordinates available, otherwise use mock"""
+    lat1, lon1 = appt1.get("latitude"), appt1.get("longitude")
+    lat2, lon2 = appt2.get("latitude"), appt2.get("longitude")
+    
+    if lat1 and lon1 and lat2 and lon2:
+        return haversine_distance(lat1, lon1, lat2, lon2)
+    
+    # Fallback to mock distance
+    addr1 = appt1.get("property_address", "")
+    addr2 = appt2.get("property_address", "")
     hash1 = sum(ord(c) for c in addr1) % 100
     hash2 = sum(ord(c) for c in addr2) % 100
     return abs(hash1 - hash2) * 0.1 + 1.0
@@ -505,10 +515,7 @@ async def optimize_route(date: str, user: User = Depends(get_current_user)):
             best_score = float('inf')
             
             for i, appt in enumerate(remaining):
-                distance = calculate_mock_distance(
-                    current.get("property_address", ""),
-                    appt.get("property_address", "")
-                )
+                distance = calculate_distance(current, appt)
                 if "city_cluster" in priorities:
                     if current.get("city") == appt.get("city"):
                         distance -= priorities["city_cluster"]["weight"]
@@ -524,9 +531,7 @@ async def optimize_route(date: str, user: User = Depends(get_current_user)):
     total_time = sum(a.get("time_at_house", 30) for a in optimized)
     total_distance = 0
     for i in range(len(optimized) - 1):
-        total_distance += calculate_mock_distance(
-            optimized[i].get("property_address", ""),
-            optimized[i + 1].get("property_address", "")
+        total_distance += calculate_distance(optimized[i], optimized[i + 1])
         )
     
     travel_time = int(total_distance * 3)
