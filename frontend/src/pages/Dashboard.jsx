@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FaApple, FaAndroid } from "react-icons/fa";
-import MockMap from "@/components/MockMap";
+import RealMap from "@/components/RealMap";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -141,7 +141,7 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <MockMap 
+            <RealMap 
               appointments={optimizedRoute?.appointments || []} 
               clients={clients}
             />

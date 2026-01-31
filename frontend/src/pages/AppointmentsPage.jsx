@@ -36,6 +36,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import AddressInput from "@/components/AddressInput";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
