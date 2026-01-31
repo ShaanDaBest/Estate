@@ -581,6 +581,17 @@ async def get_dashboard_stats(date: Optional[str] = None, user: User = Depends(g
 async def root():
     return {"message": "Real Estate Agent Scheduler API"}
 
+# Health check endpoint for Kubernetes/deployment
+@api_router.get("/health")
+async def health_check():
+    """Health check endpoint for deployment"""
+    try:
+        # Check MongoDB connection
+        await db.command("ping")
+        return {"status": "healthy", "database": "connected"}
+    except Exception as e:
+        return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
+
 # === GEOCODING ENDPOINTS (OpenStreetMap Nominatim) ===
 NOMINATIM_URL = "https://nominatim.openstreetmap.org"
 NOMINATIM_HEADERS = {"User-Agent": "EstateSchedulerPro/1.0"}
