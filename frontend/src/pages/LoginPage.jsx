@@ -13,8 +13,12 @@ export default function LoginPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        const token = localStorage.getItem("session_token");
+        const headers = token ? { "Authorization": `Bearer ${token}` } : {};
+        
         const response = await fetch(`${API}/auth/me`, {
           credentials: "include",
+          headers,
         });
         if (response.ok) {
           navigate("/", { replace: true });
