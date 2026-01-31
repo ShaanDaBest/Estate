@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import MockMap from "@/components/MockMap";
+import RealMap from "@/components/RealMap";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -247,7 +247,7 @@ export default function RouteOptimizerPage() {
                 <div className="text-neutral-400">Optimizing route...</div>
               </div>
             ) : (
-              <MockMap
+              <RealMap
                 appointments={optimizedRoute?.appointments || []}
                 clients={clients}
               />
