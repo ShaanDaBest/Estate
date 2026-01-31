@@ -22,7 +22,9 @@ export const Sidebar = () => {
   };
 
   const handleGoogleLogin = () => {
-    const redirectUrl = window.location.origin + "/";
+    // Use full URL including pathname for GitHub Pages
+    const baseUrl = window.location.origin + window.location.pathname;
+    const redirectUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
     window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
   };
 
