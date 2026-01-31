@@ -14,6 +14,12 @@ import Sidebar from "@/components/Sidebar";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+// Helper to get auth headers
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem("session_token");
+  return token ? { "Authorization": `Bearer ${token}` } : {};
+};
+
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -31,14 +37,21 @@ const ProtectedRoute = ({ children }) => {
     // Otherwise check auth via /auth/me
     const checkAuth = async () => {
       try {
+        const token = localStorage.getItem("session_token");
+        const headers = token ? { "Authorization": `Bearer ${token}` } : {};
+        
         const response = await fetch(`${API}/auth/me`, {
           credentials: "include",
+          headers,
         });
+        
         if (!response.ok) throw new Error("Not authenticated");
         const userData = await response.json();
         setUser(userData);
         setIsAuthenticated(true);
       } catch (error) {
+        console.log("Auth check failed:", error.message);
+        localStorage.removeItem("session_token");
         setIsAuthenticated(false);
       }
     };
@@ -79,7 +92,7 @@ function AppRouter() {
 
   // CRITICAL: Check for session_id synchronously during render
   // This prevents race conditions with ProtectedRoute
-  if (location.hash?.includes("session_id=")) {
+  if (window.location.hash?.includes("session_id=")) {
     return <AuthCallback />;
   }
 
