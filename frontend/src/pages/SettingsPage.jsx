@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "@/utils/api";
 import { toast } from "sonner";
 import { 
   Settings, User, Bell, Clock, Palette, Smartphone, 
@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function SettingsPage() {
   const [user, setUser] = useState(null);
@@ -83,7 +82,7 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      const res = await axios.get(`${API}/user-settings`, {
+      const res = await apiClient.get(`/user-settings`, {
         withCredentials: true,
       });
       if (res.data) {
@@ -97,7 +96,7 @@ export default function SettingsPage() {
   const saveSettings = async () => {
     setSaving(true);
     try {
-      await axios.put(`${API}/user-settings`, settings, {
+      await apiClient.put(`/user-settings`, settings, {
         withCredentials: true,
       });
       toast.success("Settings saved successfully");

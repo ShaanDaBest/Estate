@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "@/utils/api";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { Reorder } from "framer-motion";
@@ -13,7 +13,6 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import RealMap from "@/components/RealMap";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const defaultPriorities = [
   { key: "open_house", label: "Open House First", weight: 5, enabled: true },
@@ -40,7 +39,7 @@ export default function RouteOptimizerPage() {
 
   const fetchPriorities = async () => {
     try {
-      const res = await axios.get(`${API}/priorities`);
+      const res = await apiClient.get(`/priorities`);
       if (res.data.priorities) {
         setPriorities(res.data.priorities);
       }
@@ -53,8 +52,8 @@ export default function RouteOptimizerPage() {
     setLoading(true);
     try {
       const [clientsRes, optimizeRes] = await Promise.all([
-        axios.get(`${API}/clients`),
-        axios.post(`${API}/optimize-route?date=${dateStr}`),
+        apiClient.get(`/clients`),
+        apiClient.post(`/optimize-route?date=${dateStr}`),
       ]);
       
       const clientMap = {};
@@ -71,7 +70,7 @@ export default function RouteOptimizerPage() {
   const handleSavePriorities = async () => {
     setSaving(true);
     try {
-      await axios.put(`${API}/priorities`, { priorities });
+      await apiClient.put(`/priorities`, { priorities });
       toast.success("Priorities saved");
       // Re-optimize with new priorities
       fetchClientsAndOptimize();

@@ -55,7 +55,7 @@ export default function ClientsPage() {
 
   const fetchClients = async () => {
     try {
-      const res = await axios.get(`${API}/clients`);
+      const res = await apiClient.get(`/clients`);
       setClients(res.data);
     } catch (error) {
       toast.error("Failed to fetch clients");
@@ -85,10 +85,10 @@ export default function ClientsPage() {
     e.preventDefault();
     try {
       if (editingClient) {
-        await axios.put(`${API}/clients/${editingClient.id}`, formData);
+        await apiClient.put(`/clients/${editingClient.id}`, formData);
         toast.success("Client updated successfully");
       } else {
-        await axios.post(`${API}/clients`, formData);
+        await apiClient.post(`/clients`, formData);
         toast.success("Client added successfully");
       }
       handleCloseDialog();
@@ -101,7 +101,7 @@ export default function ClientsPage() {
   const handleDelete = async () => {
     if (!editingClient) return;
     try {
-      await axios.delete(`${API}/clients/${editingClient.id}`);
+      await apiClient.delete(`/clients/${editingClient.id}`);
       toast.success("Client deleted");
       setIsDeleteDialogOpen(false);
       setEditingClient(null);

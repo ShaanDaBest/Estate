@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "@/utils/api";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { Plus, Edit2, Trash2, FileText, MapPin, AlertCircle, Search, Calendar } from "lucide-react";
@@ -37,7 +37,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const emptyNote = {
   appointment_id: "",
@@ -67,8 +66,8 @@ export default function NotesPage() {
     setLoading(true);
     try {
       const [notesRes, apptsRes] = await Promise.all([
-        axios.get(`${API}/notes`),
-        axios.get(`${API}/appointments?date=${dateStr}`),
+        apiClient.get(`/notes`),
+        apiClient.get(`/appointments?date=${dateStr}`),
       ]);
       setNotes(notesRes.data);
       setAppointments(apptsRes.data);
@@ -111,10 +110,10 @@ export default function NotesPage() {
     e.preventDefault();
     try {
       if (editingNote) {
-        await axios.put(`${API}/notes/${editingNote.id}`, formData);
+        await apiClient.put(`/notes/${editingNote.id}`, formData);
         toast.success("Note updated");
       } else {
-        await axios.post(`${API}/notes`, formData);
+        await apiClient.post(`/notes`, formData);
         toast.success("Note added");
       }
       handleCloseDialog();
@@ -127,7 +126,7 @@ export default function NotesPage() {
   const handleDelete = async () => {
     if (!editingNote) return;
     try {
-      await axios.delete(`${API}/notes/${editingNote.id}`);
+      await apiClient.delete(`/notes/${editingNote.id}`);
       toast.success("Note deleted");
       setIsDeleteDialogOpen(false);
       setEditingNote(null);

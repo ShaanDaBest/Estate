@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "@/utils/api";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { Plus, Edit2, Trash2, MapPin, Clock, Calendar, Home } from "lucide-react";
@@ -38,7 +38,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import AddressInput from "@/components/AddressInput";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const emptyAppointment = {
   client_id: "",
@@ -83,8 +82,8 @@ export default function AppointmentsPage() {
     setLoading(true);
     try {
       const [apptsRes, clientsRes] = await Promise.all([
-        axios.get(`${API}/appointments?date=${dateStr}`),
-        axios.get(`${API}/clients`),
+        apiClient.get(`/appointments?date=${dateStr}`),
+        apiClient.get(`/clients`),
       ]);
       setAppointments(apptsRes.data);
       setClients(clientsRes.data);
@@ -116,10 +115,10 @@ export default function AppointmentsPage() {
     e.preventDefault();
     try {
       if (editingAppt) {
-        await axios.put(`${API}/appointments/${editingAppt.id}`, formData);
+        await apiClient.put(`/appointments/${editingAppt.id}`, formData);
         toast.success("Appointment updated");
       } else {
-        await axios.post(`${API}/appointments`, formData);
+        await apiClient.post(`/appointments`, formData);
         toast.success("Appointment created");
       }
       handleCloseDialog();
@@ -132,7 +131,7 @@ export default function AppointmentsPage() {
   const handleDelete = async () => {
     if (!editingAppt) return;
     try {
-      await axios.delete(`${API}/appointments/${editingAppt.id}`);
+      await apiClient.delete(`/appointments/${editingAppt.id}`);
       toast.success("Appointment deleted");
       setIsDeleteDialogOpen(false);
       setEditingAppt(null);
@@ -144,7 +143,7 @@ export default function AppointmentsPage() {
 
   const handleStatusChange = async (apptId, newStatus) => {
     try {
-      await axios.put(`${API}/appointments/${apptId}/status?status=${newStatus}`);
+      await apiClient.put(`/appointments/${apptId}/status?status=${newStatus}`);
       toast.success("Status updated");
       fetchData();
     } catch (error) {
