@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "@/utils/api";
 import { toast } from "sonner";
 import { Plus, Edit2, Trash2, Phone, Mail, MapPin, Search } from "lucide-react";
 import { FaApple, FaAndroid } from "react-icons/fa";
@@ -31,8 +31,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const emptyClient = {
   name: "",
