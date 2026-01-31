@@ -25,6 +25,7 @@ Build a real estate agent scheduler that routes 5 clients per day, finds ideal v
 6. **House Notes** - Property-specific notes with follow-up tracking
 7. **House Status** - Track available, pending, sold, off_market, open_house
 8. **User Data Isolation** - Each agent has their own private data
+9. **Settings Page** - Profile info, notification preferences, working hours, theme (light/dark), mobile app links
 
 ## API Endpoints
 - `/api/clients` - CRUD for clients
