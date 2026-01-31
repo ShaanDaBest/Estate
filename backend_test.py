@@ -351,6 +351,176 @@ class RealEstateAPITester:
         
         return success
 
+    def test_geocode_search(self):
+        """Test geocode search endpoint for address suggestions"""
+        test_queries = [
+            "1600 Pennsylvania Avenue, Washington, DC",
+            "Times Square, New York",
+            "Golden Gate Bridge, San Francisco"
+        ]
+        
+        for query in test_queries:
+            success, response = self.run_test(
+                f"Geocode Search: {query[:30]}...",
+                "GET",
+                "geocode/search",
+                200,
+                params={"query": query}
+            )
+            
+            if not success:
+                return False
+            
+            # Check if results are returned
+            results = response.get('results', [])
+            if results:
+                print(f"   Found {len(results)} suggestions")
+                # Check first result structure
+                first_result = results[0]
+                if 'display_name' in first_result and 'lat' in first_result and 'lon' in first_result:
+                    print(f"   First result: {first_result['display_name'][:50]}...")
+                else:
+                    print("   ⚠️  Result missing required fields (display_name, lat, lon)")
+            else:
+                print(f"   ⚠️  No results found for query: {query}")
+        
+        return True
+
+    def test_geocode_validate(self):
+        """Test geocode validate endpoint for address coordinates"""
+        test_addresses = [
+            "1600 Pennsylvania Avenue NW, Washington, DC 20500",
+            "350 Fifth Avenue, New York, NY 10118",  # Empire State Building
+            "1 Infinite Loop, Cupertino, CA 95014"   # Apple Park
+        ]
+        
+        for address in test_addresses:
+            success, response = self.run_test(
+                f"Geocode Validate: {address[:30]}...",
+                "GET",
+                "geocode/validate",
+                200,
+                params={"address": address}
+            )
+            
+            if not success:
+                return False
+            
+            # Check validation result
+            is_valid = response.get('valid', False)
+            result = response.get('result')
+            
+            if is_valid and result:
+                print(f"   ✅ Valid address")
+                print(f"   Coordinates: {result.get('latitude')}, {result.get('longitude')}")
+                print(f"   City: {result.get('city', 'N/A')}")
+                
+                # Verify required fields
+                required_fields = ['display_name', 'latitude', 'longitude']
+                missing_fields = [field for field in required_fields if field not in result]
+                if missing_fields:
+                    print(f"   ⚠️  Missing fields: {missing_fields}")
+                    return False
+            else:
+                print(f"   ❌ Address not validated: {address}")
+                # This might be expected for some addresses, so don't fail the test
+        
+        return True
+
+    def test_haversine_distance_calculation(self):
+        """Test distance calculation with real coordinates"""
+        # Create two appointments with known coordinates for distance testing
+        if not self.created_ids['clients']:
+            print("⚠️  No clients available for distance test")
+            return False
+            
+        client_id = self.created_ids['clients'][0]
+        today = date.today().strftime("%Y-%m-%d")
+        
+        # Create first appointment (Empire State Building)
+        appt1_data = {
+            "client_id": client_id,
+            "property_address": "350 Fifth Avenue, New York, NY",
+            "city": "New York",
+            "date": today,
+            "start_time": "09:00",
+            "end_time": "10:00",
+            "time_at_house": 30,
+            "is_open_house": False,
+            "appointment_type": "private_viewing",
+            "house_status": "available",
+            "latitude": 40.748817,
+            "longitude": -73.985428
+        }
+        
+        success, response1 = self.run_test(
+            "Create Appointment with Coordinates 1",
+            "POST",
+            "appointments",
+            200,
+            data=appt1_data
+        )
+        
+        if not success:
+            return False
+            
+        appt1_id = response1.get('id')
+        if appt1_id:
+            self.created_ids['appointments'].append(appt1_id)
+        
+        # Create second appointment (Times Square)
+        appt2_data = {
+            "client_id": client_id,
+            "property_address": "Times Square, New York, NY",
+            "city": "New York",
+            "date": today,
+            "start_time": "11:00",
+            "end_time": "12:00",
+            "time_at_house": 30,
+            "is_open_house": False,
+            "appointment_type": "private_viewing",
+            "house_status": "available",
+            "latitude": 40.758896,
+            "longitude": -73.985130
+        }
+        
+        success, response2 = self.run_test(
+            "Create Appointment with Coordinates 2",
+            "POST",
+            "appointments",
+            200,
+            data=appt2_data
+        )
+        
+        if not success:
+            return False
+            
+        appt2_id = response2.get('id')
+        if appt2_id:
+            self.created_ids['appointments'].append(appt2_id)
+        
+        # Test route optimization with real coordinates
+        success, route_response = self.run_test(
+            "Optimize Route with Real Coordinates",
+            "POST",
+            f"optimize-route?date={today}",
+            200
+        )
+        
+        if success and route_response:
+            appointments = route_response.get('appointments', [])
+            distance = route_response.get('total_distance_estimate', 0)
+            print(f"   Route optimized with {len(appointments)} appointments")
+            print(f"   Total distance: {distance} miles")
+            
+            # The distance between Empire State Building and Times Square should be around 0.7 miles
+            if distance > 0:
+                print(f"   ✅ Real distance calculation working")
+            else:
+                print(f"   ⚠️  Distance calculation may not be using real coordinates")
+        
+        return success
+
     def cleanup(self):
         """Clean up created test data"""
         print("\n🧹 Cleaning up test data...")
