@@ -55,6 +55,60 @@ class RealEstateAPITester:
             print(f"❌ Failed - Error: {str(e)}")
             return False, {}
 
+    def test_auth_me(self):
+        """Test auth/me endpoint for profile info"""
+        success, response = self.run_test(
+            "Get Current User (Auth Me)",
+            "GET",
+            "auth/me",
+            200
+        )
+        
+        if success and response:
+            print(f"   User: {response.get('name', 'Unknown')} ({response.get('email', 'No email')})")
+            return True
+        return success
+
+    def test_user_settings_get(self):
+        """Test GET user-settings endpoint"""
+        success, response = self.run_test(
+            "Get User Settings",
+            "GET",
+            "user-settings",
+            200
+        )
+        
+        if success and response:
+            print(f"   Settings loaded: theme={response.get('theme', 'unknown')}, emailNotifications={response.get('emailNotifications', 'unknown')}")
+            return True
+        return success
+
+    def test_user_settings_put(self):
+        """Test PUT user-settings endpoint"""
+        settings_data = {
+            "emailNotifications": True,
+            "appointmentReminders": True,
+            "dailySummary": False,
+            "reminderTime": "30",
+            "workStartTime": "09:00",
+            "workEndTime": "18:00",
+            "workDays": ["mon", "tue", "wed", "thu", "fri"],
+            "theme": "light"
+        }
+        
+        success, response = self.run_test(
+            "Update User Settings",
+            "PUT",
+            "user-settings",
+            200,
+            data=settings_data
+        )
+        
+        if success and response:
+            print(f"   Settings saved: theme={response.get('theme')}, workDays={len(response.get('workDays', []))}")
+            return True
+        return success
+
     def test_dashboard_stats(self):
         """Test dashboard stats endpoint"""
         today = date.today().strftime("%Y-%m-%d")
