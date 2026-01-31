@@ -37,10 +37,13 @@ export const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
+      const token = localStorage.getItem("session_token");
       await fetch(`${API}/auth/logout`, {
         method: "POST",
         credentials: "include",
+        headers: token ? { "Authorization": `Bearer ${token}` } : {},
       });
+      localStorage.removeItem("session_token");
       toast.success("Logged out successfully");
       navigate("/login", { replace: true });
     } catch (error) {
