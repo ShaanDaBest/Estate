@@ -42,7 +42,7 @@ class SessionData(BaseModel):
 
 # === AUTH HELPER ===
 async def get_current_user(request: Request) -> User:
-    """Get current user from session token (cookie or header)"""
+    """Get current user from session token (cookie or header) or create guest"""
     session_token = request.cookies.get("session_token")
     if not session_token:
         auth_header = request.headers.get("Authorization")
@@ -70,6 +70,49 @@ async def get_current_user(request: Request) -> User:
         raise HTTPException(status_code=401, detail="User not found")
     
     return User(**user)
+
+# === GUEST ACCOUNT ENDPOINT ===
+@api_router.post("/auth/guest")
+async def create_guest_session(response: Response):
+    """Create a guest account and session"""
+    # Generate guest user
+    guest_id = f"guest_{uuid.uuid4().hex[:12]}"
+    session_token = f"guest_token_{uuid.uuid4().hex}"
+    
+    # Create guest user
+    user_doc = {
+        "user_id": guest_id,
+        "email": f"{guest_id}@guest.local",
+        "name": "Guest User",
+        "picture": None,
+        "is_guest": True,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.users.insert_one(user_doc)
+    
+    # Create session
+    expires_at = datetime.now(timezone.utc) + timedelta(days=30)
+    session_doc = {
+        "session_token": session_token,
+        "user_id": guest_id,
+        "expires_at": expires_at.isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.user_sessions.insert_one(session_doc)
+    
+    # Set cookie
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        path="/",
+        max_age=30 * 24 * 60 * 60
+    )
+    
+    user = await db.users.find_one({"user_id": guest_id}, {"_id": 0})
+    return {"user": user, "session_token": session_token}
 
 # === AUTH ENDPOINTS ===
 @api_router.post("/auth/session")
