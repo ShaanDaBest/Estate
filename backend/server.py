@@ -166,6 +166,38 @@ async def logout(request: Request, response: Response):
     response.delete_cookie(key="session_token", path="/", secure=True, samesite="none")
     return {"message": "Logged out"}
 
+# === USER SETTINGS MODELS ===
+class UserSettings(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    user_id: str = ""
+    emailNotifications: bool = True
+    appointmentReminders: bool = True
+    dailySummary: bool = False
+    reminderTime: str = "30"
+    workStartTime: str = "09:00"
+    workEndTime: str = "18:00"
+    workDays: List[str] = Field(default_factory=lambda: ["mon", "tue", "wed", "thu", "fri"])
+    theme: str = "light"
+
+# === USER SETTINGS ENDPOINTS ===
+@api_router.get("/user-settings")
+async def get_user_settings(user: User = Depends(get_current_user)):
+    settings = await db.user_settings.find_one({"user_id": user.user_id}, {"_id": 0})
+    if not settings:
+        return UserSettings(user_id=user.user_id)
+    return settings
+
+@api_router.put("/user-settings")
+async def update_user_settings(settings: UserSettings, user: User = Depends(get_current_user)):
+    settings.user_id = user.user_id
+    doc = settings.model_dump()
+    await db.user_settings.update_one(
+        {"user_id": user.user_id},
+        {"$set": doc},
+        upsert=True
+    )
+    return settings
+
 # === ENUMS ===
 class PhoneType(str, Enum):
     APPLE = "apple"
