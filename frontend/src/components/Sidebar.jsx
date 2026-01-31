@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Users, Calendar, Route, FileText, LogOut, Settings } from "lucide-react";
 import { toast } from "sonner";
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import { useAuth } from "@/App";
 
 export const Sidebar = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth();
 
   const navItems = [
     { path: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -18,39 +16,10 @@ export const Sidebar = () => {
     { path: "/settings", icon: Settings, label: "Settings" },
   ];
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("session_token");
-        const response = await fetch(`${API}/auth/me`, {
-          credentials: "include",
-          headers: token ? { "Authorization": `Bearer ${token}` } : {},
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user");
-      }
-    };
-    fetchUser();
-  }, []);
-
   const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem("session_token");
-      await fetch(`${API}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-        headers: token ? { "Authorization": `Bearer ${token}` } : {},
-      });
-      localStorage.removeItem("session_token");
-      toast.success("Logged out successfully");
-      navigate("/login", { replace: true });
-    } catch (error) {
-      toast.error("Failed to logout");
-    }
+    await logout();
+    toast.success("Logged out successfully");
+    navigate("/login", { replace: true });
   };
 
   const getInitials = (name) => {
