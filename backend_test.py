@@ -380,6 +380,20 @@ def main():
             print("❌ API is not accessible")
             return 1
         
+        # Test authentication and user profile
+        if not tester.test_auth_me():
+            print("❌ Auth/me failed - authentication may be broken")
+            return 1
+        
+        # Test Settings API endpoints
+        if not tester.test_user_settings_get():
+            print("❌ Get user settings failed")
+            return 1
+            
+        if not tester.test_user_settings_put():
+            print("❌ Update user settings failed")
+            return 1
+        
         # Test dashboard stats
         if not tester.test_dashboard_stats():
             print("❌ Dashboard stats failed")
