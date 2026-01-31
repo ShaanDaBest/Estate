@@ -11,6 +11,7 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from enum import Enum
 import httpx
+import math
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -573,6 +574,83 @@ async def get_dashboard_stats(date: Optional[str] = None, user: User = Depends(g
 @api_router.get("/")
 async def root():
     return {"message": "Real Estate Agent Scheduler API"}
+
+# === GEOCODING ENDPOINTS (OpenStreetMap Nominatim) ===
+NOMINATIM_URL = "https://nominatim.openstreetmap.org"
+NOMINATIM_HEADERS = {"User-Agent": "EstateSchedulerPro/1.0"}
+
+@api_router.get("/geocode/search")
+async def search_address(query: str):
+    """Search for addresses using Nominatim"""
+    try:
+        async with httpx.AsyncClient() as client_http:
+            response = await client_http.get(
+                f"{NOMINATIM_URL}/search",
+                params={
+                    "q": query,
+                    "format": "json",
+                    "addressdetails": 1,
+                    "limit": 5,
+                },
+                headers=NOMINATIM_HEADERS,
+                timeout=10.0
+            )
+            if response.status_code == 200:
+                results = response.json()
+                return {"results": results}
+            return {"results": []}
+    except Exception as e:
+        logger.error(f"Geocode search error: {e}")
+        return {"results": []}
+
+@api_router.get("/geocode/validate")
+async def validate_address(address: str):
+    """Validate an address and return coordinates"""
+    try:
+        async with httpx.AsyncClient() as client_http:
+            response = await client_http.get(
+                f"{NOMINATIM_URL}/search",
+                params={
+                    "q": address,
+                    "format": "json",
+                    "addressdetails": 1,
+                    "limit": 1,
+                },
+                headers=NOMINATIM_HEADERS,
+                timeout=10.0
+            )
+            if response.status_code == 200:
+                results = response.json()
+                if results:
+                    result = results[0]
+                    addr = result.get("address", {})
+                    return {
+                        "valid": True,
+                        "result": {
+                            "display_name": result.get("display_name"),
+                            "latitude": float(result.get("lat")),
+                            "longitude": float(result.get("lon")),
+                            "city": addr.get("city") or addr.get("town") or addr.get("village") or "",
+                        }
+                    }
+            return {"valid": False, "result": None}
+    except Exception as e:
+        logger.error(f"Geocode validate error: {e}")
+        return {"valid": False, "result": None, "error": str(e)}
+
+def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Calculate distance between two points in miles using Haversine formula"""
+    R = 3959  # Earth's radius in miles
+    
+    lat1_rad = math.radians(lat1)
+    lat2_rad = math.radians(lat2)
+    delta_lat = math.radians(lat2 - lat1)
+    delta_lon = math.radians(lon2 - lon1)
+    
+    a = math.sin(delta_lat/2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon/2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    
+    return R * c
 
 app.include_router(api_router)
 
