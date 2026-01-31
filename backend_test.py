@@ -8,6 +8,7 @@ class RealEstateAPITester:
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0
+        self.session_token = "settings_test_token_456"  # Test token from agent context
         self.created_ids = {
             'clients': [],
             'appointments': [],
