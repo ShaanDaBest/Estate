@@ -16,7 +16,7 @@ export default function AuthCallback() {
     const processAuth = async () => {
       try {
         // Extract session_id from URL hash
-        const hash = location.hash;
+        const hash = window.location.hash;
         const sessionIdMatch = hash.match(/session_id=([^&]+)/);
         
         if (!sessionIdMatch) {
@@ -26,6 +26,7 @@ export default function AuthCallback() {
         }
 
         const sessionId = sessionIdMatch[1];
+        console.log("Processing session_id:", sessionId);
 
         // Exchange session_id for session_token
         const response = await fetch(`${API}/auth/session`, {
@@ -38,13 +39,22 @@ export default function AuthCallback() {
         });
 
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Auth response error:", errorText);
           throw new Error("Failed to authenticate");
         }
 
-        const userData = await response.json();
+        const data = await response.json();
+        console.log("Auth successful, user:", data.user?.email);
+        
+        // Store session token in localStorage as fallback for cookies
+        if (data.session_token) {
+          localStorage.setItem("session_token", data.session_token);
+        }
 
         // Clear the hash from URL and navigate to dashboard with user data
-        navigate("/", { replace: true, state: { user: userData } });
+        window.history.replaceState(null, "", window.location.pathname);
+        navigate("/", { replace: true, state: { user: data.user } });
       } catch (error) {
         console.error("Auth error:", error);
         navigate("/login", { replace: true });
