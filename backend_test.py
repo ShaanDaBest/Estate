@@ -594,6 +594,20 @@ def main():
             print("❌ Priority settings failed")
             return 1
         
+        # Test geocoding endpoints (OpenStreetMap integration)
+        if not tester.test_geocode_search():
+            print("❌ Geocode search failed")
+            return 1
+        
+        if not tester.test_geocode_validate():
+            print("❌ Geocode validate failed")
+            return 1
+        
+        # Test Haversine distance calculation with real coordinates
+        if not tester.test_haversine_distance_calculation():
+            print("❌ Haversine distance calculation failed")
+            return 1
+        
         print(f"\n📊 Test Results: {tester.tests_passed}/{tester.tests_run} passed")
         
         if tester.tests_passed == tester.tests_run:
