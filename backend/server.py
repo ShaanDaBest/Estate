@@ -715,10 +715,22 @@ def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
 
 app.include_router(api_router)
 
+# Get allowed origins - for production, use specific domains
+cors_origins = os.environ.get('CORS_ORIGINS', '*')
+if cors_origins == '*':
+    # Allow common development and production origins
+    allowed_origins = [
+        "http://localhost:3000",
+        "https://localhost:3000",
+        "https://agent-timeplanner.preview.emergentagent.com",
+    ]
+else:
+    allowed_origins = cors_origins.split(',')
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
