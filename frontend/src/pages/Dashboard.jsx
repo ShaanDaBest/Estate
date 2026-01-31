@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "@/utils/api";
 import { Calendar, MapPin, Clock, Users, Home, Navigation } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FaApple, FaAndroid } from "react-icons/fa";
 import RealMap from "@/components/RealMap";
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -30,9 +28,9 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const [statsRes, apptsRes, clientsRes] = await Promise.all([
-        axios.get(`${API}/dashboard/stats?date=${dateStr}`),
-        axios.get(`${API}/appointments?date=${dateStr}`),
-        axios.get(`${API}/clients`),
+        apiClient.get(`/dashboard/stats?date=${dateStr}`),
+        apiClient.get(`/appointments?date=${dateStr}`),
+        apiClient.get(`/clients`),
       ]);
       
       setStats(statsRes.data);
@@ -45,7 +43,7 @@ export default function Dashboard() {
       
       // Auto-optimize route
       if (apptsRes.data.length > 0) {
-        const optimizeRes = await axios.post(`${API}/optimize-route?date=${dateStr}`);
+        const optimizeRes = await apiClient.post(`/optimize-route?date=${dateStr}`);
         setOptimizedRoute(optimizeRes.data);
       } else {
         setOptimizedRoute(null);
