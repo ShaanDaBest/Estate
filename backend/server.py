@@ -532,7 +532,6 @@ async def optimize_route(date: str, user: User = Depends(get_current_user)):
     total_distance = 0
     for i in range(len(optimized) - 1):
         total_distance += calculate_distance(optimized[i], optimized[i + 1])
-        )
     
     travel_time = int(total_distance * 3)
     total_time += travel_time
