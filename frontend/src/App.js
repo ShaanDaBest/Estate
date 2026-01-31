@@ -1,5 +1,5 @@
 import "@/App.css";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { HashRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { useState, useEffect, createContext, useContext } from "react";
 import Dashboard from "@/pages/Dashboard";
@@ -222,12 +222,12 @@ const AppContent = () => {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AuthProvider>
         <AppContent />
         <Toaster position="top-right" richColors />
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
