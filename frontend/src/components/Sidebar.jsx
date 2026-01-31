@@ -1,10 +1,10 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Users, Calendar, Route, FileText, LogOut, Settings } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { LayoutDashboard, Users, Calendar, Route, FileText, LogOut, Settings, User } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/App";
+import { FcGoogle } from "react-icons/fc";
 
 export const Sidebar = () => {
-  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const navItems = [
@@ -18,9 +18,15 @@ export const Sidebar = () => {
 
   const handleLogout = async () => {
     await logout();
-    toast.success("Logged out successfully");
-    navigate("/login", { replace: true });
+    toast.success("Signed out - new guest session created");
   };
+
+  const handleGoogleLogin = () => {
+    const redirectUrl = window.location.origin + "/";
+    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+  };
+
+  const isGuest = user?.is_guest || user?.email?.includes("@guest.local");
 
   const getInitials = (name) => {
     if (!name) return "?";
@@ -57,7 +63,8 @@ export const Sidebar = () => {
       </nav>
       
       <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
-        <div className="flex items-center justify-between">
+        {/* User Info */}
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3 min-w-0 flex-1">
             {user?.picture ? (
               <img 
@@ -66,30 +73,50 @@ export const Sidebar = () => {
                 className="w-10 h-10 rounded-full object-cover flex-shrink-0"
               />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-[#D3AF37] flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-semibold text-sm">
-                  {getInitials(user?.name)}
-                </span>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                isGuest ? "bg-neutral-600" : "bg-[#D3AF37]"
+              }`}>
+                {isGuest ? (
+                  <User className="text-white" size={18} />
+                ) : (
+                  <span className="text-white font-semibold text-sm">
+                    {getInitials(user?.name)}
+                  </span>
+                )}
               </div>
             )}
             <div className="hidden lg:block min-w-0">
               <p className="text-sm text-white font-medium truncate">
-                {user?.name || "Loading..."}
+                {isGuest ? "Guest User" : user?.name || "Loading..."}
               </p>
               <p className="text-xs text-neutral-400 truncate">
-                {user?.email || ""}
+                {isGuest ? "Sign in to save data" : user?.email || ""}
               </p>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="p-2 text-neutral-400 hover:text-white hover:bg-white/10 rounded transition-colors"
-            title="Logout"
-            data-testid="logout-btn"
-          >
-            <LogOut size={18} />
-          </button>
+          {!isGuest && (
+            <button
+              onClick={handleLogout}
+              className="p-2 text-neutral-400 hover:text-white hover:bg-white/10 rounded transition-colors"
+              title="Logout"
+              data-testid="logout-btn"
+            >
+              <LogOut size={18} />
+            </button>
+          )}
         </div>
+
+        {/* Sign in with Google button for guests */}
+        {isGuest && (
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-white text-neutral-800 text-sm font-medium rounded hover:bg-neutral-100 transition-colors"
+            data-testid="google-signin-sidebar-btn"
+          >
+            <FcGoogle size={18} />
+            <span>Sign in with Google</span>
+          </button>
+        )}
       </div>
     </aside>
   );
